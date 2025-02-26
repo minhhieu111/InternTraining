@@ -20,7 +20,7 @@ public class App {
         return persons;
     }
 
-    public static double AgeAverange(ArrayList<Person> personAge) {
+    public static double AgeAverage(ArrayList<Person> personAge) {
         return personAge.stream()
                 .mapToInt(Person::getAge)
                 .average()
@@ -42,6 +42,7 @@ public class App {
     }
 
     public static void countByGender(ArrayList<Person> persons) {
+        System.out.println("1.4");
         long personFemale = persons.stream().filter(p -> p.getGender().equals("FeMale")).count();
         long personMale = persons.stream().filter(p -> p.getGender().equals("Male")).count();
         long personOther = persons.stream().filter(p -> p.getGender().equals("Other")).count();
@@ -51,30 +52,8 @@ public class App {
         System.out.println("Number of other: " + personOther);
     }
 
-    public static void main(String[] args) throws Exception {
-        ArrayList<Person> allPerson = getPerson();
-
-        // 1.1
-        System.out.println("1.1");
-        ArrayList<Person> children = new ArrayList<>();
-        ArrayList<Person> middleAgeds = new ArrayList<>();
-        ArrayList<Person> elders = new ArrayList<>();
-        allPerson.forEach((per) -> {
-            if (per.getAge() < 18) {
-                children.add(per);
-            } else if (per.getAge() > 18 && per.getAge() <= 60) {
-                middleAgeds.add(per);
-            } else {
-                elders.add(per);
-            }
-        });
-        System.out.println("List children:");
-        children.forEach((child) -> System.out.println(child));
-        System.out.println("List middleAgeds:");
-        middleAgeds.forEach((middleAged) -> System.out.println(middleAged));
-        System.out.println("List elders:");
-        elders.forEach((elder) -> System.out.println(elder));
-        // 1.2
+    public static void groupAverageAge(ArrayList<Person> children, ArrayList<Person> middleAged,
+            ArrayList<Person> elders) {
         System.out.println("1.2");
         Scanner scanner = new Scanner(System.in);
         boolean check = true;
@@ -88,23 +67,24 @@ public class App {
 
             switch (a) {
                 case 1 -> {
-                    personAvg = AgeAverange(children);
+                    personAvg = AgeAverage(children);
                     check = false;
                 }
                 case 2 -> {
-                    personAvg = AgeAverange(middleAgeds);
+                    personAvg = AgeAverage(middleAged);
                     check = false;
                 }
                 case 3 -> {
-                    personAvg = AgeAverange(elders);
+                    personAvg = AgeAverage(elders);
                     check = false;
                 }
                 default -> System.out.println("Nhap sai");
             }
         } while (check);
         System.out.println("Group age averange: " + personAvg);
+    }
 
-        // 1.3
+    public static void getOldestAndYoungest(ArrayList<Person> allPerson) {
         System.out.println("1.3");
         ArrayList<Person> getOldest = getOldest(allPerson);
         ArrayList<Person> getYoungest = getYoungest(allPerson);
@@ -114,11 +94,10 @@ public class App {
 
         System.out.println("Youngest person: ");
         getYoungest.forEach(System.out::println);
+    }
 
-        // 1.4
-        System.out.println("1.4");
-        countByGender(allPerson);
-        // 1.5
+    public static void createNewPerson(ArrayList<Person> allPerson) {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("1.5");
         System.out.println("New user: ");
         System.out.println("Name: ");
@@ -134,12 +113,16 @@ public class App {
         String gender = scanner.nextLine();
         allPerson.add(new Person(name, age, gender));
         allPerson.forEach(System.out::println);
+        scanner.close();
+    }
 
-        // 1.6
+    public static void sortByAge(ArrayList<Person> allPerson) {
         System.out.println("1.6");
         System.out.println("Sort by age: ");
         allPerson.stream().sorted(Comparator.comparing(Person::getAge)).forEach(System.out::println);
-        // 1.7
+    }
+
+    public static void soundPerson(ArrayList<Person> allPerson) {
         System.out.println("1.7");
         System.out.println("sound: ");
         allPerson.forEach(p -> {
@@ -153,8 +136,48 @@ public class App {
                 System.out.println(p);
                 System.out.println("Hey man!");
             }
-
         });
-    };
+    }
 
+    public static void main(String[] args) throws Exception {
+        ArrayList<Person> allPerson = getPerson();
+
+        // 1.1
+        System.out.println("1.1");
+        ArrayList<Person> children = new ArrayList<>();
+        ArrayList<Person> middleAged = new ArrayList<>();
+        ArrayList<Person> elders = new ArrayList<>();
+        allPerson.forEach((per) -> {
+            if (per.getAge() < 18) {
+                children.add(per);
+            } else if (per.getAge() > 18 && per.getAge() <= 60) {
+                middleAged.add(per);
+            } else {
+                elders.add(per);
+            }
+        });
+        System.out.println("List children:");
+        children.forEach((child) -> System.out.println(child));
+        System.out.println("List middleAged:");
+        middleAged.forEach((midAged) -> System.out.println(midAged));
+        System.out.println("List elders:");
+        elders.forEach((elder) -> System.out.println(elder));
+        // 1.2
+        groupAverageAge(children, middleAged, elders);
+
+        // 1.3
+        getOldestAndYoungest(allPerson);
+
+        // 1.4
+        countByGender(allPerson);
+
+        // 1.5
+        createNewPerson(allPerson);
+
+        // 1.6
+        sortByAge(allPerson);
+
+        // 1.7
+        soundPerson(allPerson);
+    };
 }
